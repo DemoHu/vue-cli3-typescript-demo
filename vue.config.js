@@ -2,25 +2,49 @@
  * @Author: Siwen
  * @Date: 2019-08-08 13:50:07
  * @LastEditors: Siwen
- * @LastEditTime: 2019-08-12 11:11:52
+ * @LastEditTime: 2019-08-23 11:28:26
  * @Description: 
  */
 'use strict'
 const path = require('path')
+const cdn = {
+  js: [
+    'https://cdn.bootcss.com/vue/2.6.10/vue.min.js',
+    'https://cdn.bootcss.com/vuex/3.0.1/vuex.min.js',
+    'https://cdn.bootcss.com/vue-router/3.0.3/vue-router.min.js',
+    'https://cdn.bootcss.com/axios/0.19.0/axios.min.js'
+  ]
+}
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
+console.log('当前环境:',process.env.VUE_APP_ENV)
 module.exports = {
-  baseUrl: './',
+  publicPath: './',
   lintOnSave: process.env.NODE_ENV === 'development',
-  // productionSourceMap: false,
+  productionSourceMap: false,
   devServer: {
     open: true,
+    proxy: {
+      '/api': {
+          target: 'https://api.chainlottery.io',
+          changeOrigin: true,
+          ws: true,
+          pathRewrite: {
+            '^/api': ''
+          }
+      }
+    }
   },
   configureWebpack: config => {
     config.resolve.alias["@"] = resolve("src")
     if (process.env.NODE_ENV === 'production') {
-     
+      config.externals = {
+        'vue': 'Vue',
+        'vue-router': 'VueRouter',
+        'vuex': 'Vuex',
+        'axios': 'axios'
+      }
     } else {
       // 为开发环境修改配置...
     }
@@ -37,6 +61,12 @@ module.exports = {
   chainWebpack(config) {
     config.plugins.delete('preload')
     config.plugins.delete('prefetch')
+    if (process.env.NODE_ENV === 'production') {
+      config.plugin('html').tap(args => {
+        args[0].cdn = cdn
+        return args
+      })
+    }
     config.optimization.splitChunks({
       chunks: 'all',
       cacheGroups: {

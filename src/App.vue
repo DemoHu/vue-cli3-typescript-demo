@@ -2,14 +2,14 @@
  * @Author: Siwen
  * @Date: 2019-08-08 13:42:48
  * @LastEditors: Siwen
- * @LastEditTime: 2019-08-12 18:39:51
+ * @LastEditTime: 2019-08-23 11:22:54
  * @Description: App入口
  -->
 <template>
   <div id="app">
-    <menu-Header></menu-Header>
+    <menu-Header v-if="!page404"></menu-Header>
     <router-view class="router_view" />
-    <footer-copy-right></footer-copy-right>
+    <footer-copy-right v-if="!page404"></footer-copy-right>
   </div>
 </template>
 <script lang="ts">
@@ -23,7 +23,12 @@ import FooterCopyRight from '@/components/Footer.vue'
   }
 })
 export default class App extends Vue {
-  public created() {}
+  private page404: boolean = false
+  public created() {
+    this.$event.$on('page404', (status: boolean) => {
+      this.page404 = status
+    })
+  }
   public mounted() {}
 }
 </script>

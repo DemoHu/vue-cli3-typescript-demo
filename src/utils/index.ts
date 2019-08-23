@@ -2,7 +2,7 @@
  * @Author: Siwen
  * @Date: 2019-08-08 15:20:52
  * @LastEditors: Siwen
- * @LastEditTime: 2019-08-08 15:54:46
+ * @LastEditTime: 2019-08-23 11:28:47
  * @Description: utils 工具类
  */
 export default {
@@ -23,13 +23,12 @@ export default {
    * @param {function} callback 回调函数
    */
   countDown(times: number, callback: Function) {
-    let timer:number
-    timer = setInterval(() => {
+    const timer: number = setInterval(() => {
       if (times > 0) {
         let day: number | string = Math.floor(times / (60 * 60 * 24))
         let hour: number | string = Math.floor(times / (60 * 60)) - (day * 24)
         let minute: number | string = Math.floor(times / 60) - (day * 24 * 60) - (hour * 60)
-        let second : number | string= Math.floor(times) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60)
+        let second : number | string = Math.floor(times) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60)
         // let dayHour = (day * 24) + hour
         let hourMinute: number | string = (hour * 60) + minute
         // dayHour = `${dayHour < 10 ? '0' : ''}${dayHour}`
